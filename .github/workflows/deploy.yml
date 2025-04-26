@@ -1,0 +1,93 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build, Push, and Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      RABBITMQ_URL: amqp://guest:guest@${{ secrets.AWS_EC2_RABBITMQ }}:5672/
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Docker
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    # Step 3: Build and push Docker images for each service
+    - name: Build and push order-service
+      run: |
+        docker build -t $DOCKER_USERNAME/order-service:latest ./order-service
+        docker push $DOCKER_USERNAME/order-service:latest
+
+    - name: Build and push inventory-service
+      run: |
+        docker build -t $DOCKER_USERNAME/inventory-service:latest ./inventory-service
+        docker push $DOCKER_USERNAME/inventory-service:latest
+
+    - name: Build and push notification-service
+      run: |
+        docker build -t $DOCKER_USERNAME/notification-service:latest ./notification-service
+        docker push $DOCKER_USERNAME/notification-service:latest
+
+    # Step 4: Deploy RabbitMQ to AWS EC2
+    - name: Deploy RabbitMQ to AWS EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.AWS_EC2_RABBITMQ }}
+        username: ec2-user
+        key: ${{ secrets.AWS_SSH_KEY }}
+        script: |
+          docker pull rabbitmq:3-management
+          docker stop rabbitmq || true
+          docker rm rabbitmq || true
+          docker run -d --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+    # Step 5: Deploy order-service to AWS EC2
+    - name: Deploy order-service to AWS EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.AWS_EC2_ORDER_SERVICE }}
+        username: ec2-user
+        key: ${{ secrets.AWS_SSH_KEY }}
+        script: |
+          docker pull $DOCKER_USERNAME/order-service:latest
+          docker stop order-service || true
+          docker rm order-service || true
+          docker run -d --name order-service -p 8080:8080 -e RABBITMQ_URL=$RABBITMQ_URL $DOCKER_USERNAME/order-service:latest
+
+    # Step 6: Deploy inventory-service to AWS EC2
+    - name: Deploy inventory-service to AWS EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.AWS_EC2_INVENTORY_SERVICE }}
+        username: ec2-user
+        key: ${{ secrets.AWS_SSH_KEY }}
+        script: |
+          docker pull $DOCKER_USERNAME/inventory-service:latest
+          docker stop inventory-service || true
+          docker rm inventory-service || true
+          docker run -d --name inventory-service -p 8081:8080 -e RABBITMQ_URL=$RABBITMQ_URL $DOCKER_USERNAME/inventory-service:latest
+
+    # Step 7: Deploy notification-service to AWS EC2
+    - name: Deploy notification-service to AWS EC2
+      uses: appleboy/ssh-action@v0.1.6
+      with:
+        host: ${{ secrets.AWS_EC2_NOTIFICATION_SERVICE }}
+        username: ec2-user
+        key: ${{ secrets.AWS_SSH_KEY }}
+        script: |
+          docker pull $DOCKER_USERNAME/notification-service:latest
+          docker stop notification-service || true
+          docker rm notification-service || true
+          docker run -d --name notification-service -p 8082:8080 -e RABBITMQ_URL=$RABBITMQ_URL $DOCKER_USERNAME/notification-service:latest

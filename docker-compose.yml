@@ -1,0 +1,48 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     # RabbitMQ default port
+      - "15672:15672"   # RabbitMQ management UI
+
+  order-service:
+    build:
+      context: ./order-service
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+
+  inventory-service:
+    build:
+      context: ./inventory-service
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+
+  notification-service:
+    build:
+      context: ./notification-service
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "8080:80"  # Frontend service port
+    depends_on:
+      - order-service
+      - inventory-service
+      - notification-service
+    environment:
+      - ORDER_SERVICE_URL=http://order-service:8080
+      - INVENTORY_SERVICE_URL=http://inventory-service:8080
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8080
+    networks:
+      - frontend_network
+
