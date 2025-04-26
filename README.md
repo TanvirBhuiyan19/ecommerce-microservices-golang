@@ -49,7 +49,7 @@ ecommerce-microservices-golang/
 │   │   └── publisher.go
 │   ├── shared/
 │   │   └── rabbitmq.go
-│   └── [README.md](http://_vscodecontentref_/0)
+│   └── [README.md]
 ├── inventory-service/
 │   ├── go.mod
 │   ├── Dockerfile
@@ -60,7 +60,7 @@ ecommerce-microservices-golang/
 │   │   └── publisher.go
 │   ├── shared/
 │   │   └── rabbitmq_manager.go
-│   └── [README.md](http://_vscodecontentref_/1)
+│   └── [README.md]
 ├── notification-service/
 │   ├── go.mod
 │   ├── Dockerfile
@@ -69,8 +69,8 @@ ecommerce-microservices-golang/
 │   │   └── consumer.go
 │   ├── shared/
 │   │   └── rabbitmq.go
-│   └── [README.md](http://_vscodecontentref_/2)
-└── [docker-compose.yml](http://_vscodecontentref_/3)
+│   └── [README.md]
+└── [docker-compose.yml]
 
 
 ## 🚀 Local Development Setup
@@ -90,7 +90,7 @@ ecommerce-microservices-golang/
     docker-compose up --build
 
 3. Access RabbitMQ Management UI:
-    URL:<vscode_annotation details='%5B%7B%22title%22%3A%22hardcoded-credentials%22%2C%22description%22%3A%22Embedding%20credentials%20in%20source%20code%20risks%20unauthorized%20access%22%7D%5D'> </vscode_annotation>http://localhost:15672
+    URL: http://localhost:15672
     Username: guest
     Password: guest
 
