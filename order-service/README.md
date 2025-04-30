@@ -44,93 +44,110 @@ This service is designed to be lightweight, scalable, and independently deployab
    ```bash
    git clone https://github.com/TanvirBhuiyan19/ecommerce-microservices-golang.git
    cd ecommerce-microservices-golang/order-service
-    ```
+   ```
 
 2. Build and run the service using Docker:
-    ```bash
-    docker build -t order-service .
-    docker run -d --name order-service -p 8080:8080 -e RABBITMQ_URL=amqp://guest:guest@localhost:5672/ order-service
-    ```
+   ```bash
+   docker build -t order-service .
+   docker run -d --name order-service -p 8080:8080 -e RABBITMQ_URL=amqp://guest:guest@localhost:5672/ order-service
+   ```
 
 3. Alternatively, run the service locally:
-    ```bash
-    go mod tidy
-    go run main.go
-    ```
+   ```bash
+   go mod tidy
+   go run main.go
+   ```
 
-4. Ensure RabbitMQ is running and accessible at the URL specified in the RABBITMQ_URL environment variable.
-
-
-✅ Features
-
-🔄 Asynchronous Communication
-    Publishes order events to the order_created RabbitMQ exchange.
-
-🛒 REST API
-    Endpoint: /create-order
-    Method: GET
-    Query Parameters:
-        order_id: Unique identifier for the order.
-        user: User placing the order.
-        item: Item being ordered.
-    Example:
-    ```bash
-    curl "http://localhost:8080/create-order?order_id=ORD123&user=John&item=Book"
-    ```
-
-🏗️ Environment Variables
-    Variable	Description	Default Value
-    RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
-
-📂 Project Structure
----
-
-    order-service/
-    ├── go.mod
-    ├── Dockerfile
-    ├── main.go
-    ├── publisher/
-    │   └── publisher.go
-    ├── shared/
-    │   └── rabbitmq_manager.go
-    └── README.md
-
-🧪 Testing (Planned)
-    Unit tests for RabbitMQ publishers.
-    Integration tests for end-to-end message flow.
-    Mock RabbitMQ for isolated testing.
-
-☁️ Deployment
-    Dockerized Service
-
-    Build and push the Docker image:
-
-        docker build -t your-docker-username/order-service:latest .
-        docker push your-docker-username/order-service:latest
-
-    Deploy the service using Docker Compose:
-    
-        order-service:
-            build:
-                context: ./order-service
-            environment:
-                - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-            depends_on:
-                - rabbitmq
+4. Ensure RabbitMQ is running and accessible at the URL specified in the `RABBITMQ_URL` environment variable.
 
 ---
-Production Deployment
-    Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
-    Use environment variables to configure RabbitMQ connection details.
 
+## ✅ Features
 
-👨‍💻 Author
-    Tanvir Bhuiyan
-    Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer
-    🔗 GitHub: @TanvirBhuiyan19
+### 🔄 Asynchronous Communication
+- Publishes order events to the `order_created` RabbitMQ exchange.
 
-📄 License
-    This project is licensed under the MIT License. See the LICENSE file for details.
+### 🛒 REST API
+- **Endpoint**: `/create-order`
+- **Method**: `GET`
+- **Query Parameters**:
+  - `order_id`: Unique identifier for the order.
+  - `user`: User placing the order.
+  - `item`: Item being ordered.
+- **Example**:
+  ```bash
+  curl "http://localhost:8080/create-order?order_id=ORD123&user=John&item=Book"
+  ```
 
-✨ “Building scalable systems, one service at a time.” 
 ---
+
+## 🏗️ Environment Variables
+
+| Variable       | Description                | Default Value                       |
+|----------------|----------------------------|-------------------------------------|
+| `RABBITMQ_URL` | RabbitMQ connection URL    | `amqp://guest:guest@localhost:5672/` |
+
+---
+
+## 📂 Project Structure
+
+```plaintext
+order-service/
+├── go.mod
+├── Dockerfile
+├── main.go
+├── publisher/
+│   └── publisher.go
+├── shared/
+│   └── rabbitmq_manager.go
+└── README.md
+```
+
+---
+
+## 🧪 Testing (Planned)
+- Unit tests for RabbitMQ publishers.
+- Integration tests for end-to-end message flow.
+- Mock RabbitMQ for isolated testing.
+
+---
+
+## ☁️ Deployment
+
+### Dockerized Service
+- Build and push the Docker image:
+  ```bash
+  docker build -t your-docker-username/order-service:latest .
+  docker push your-docker-username/order-service:latest
+  ```
+
+- Deploy the service using Docker Compose:
+  ```yml
+  order-service:
+    build:
+      context: ./order-service
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+  ```
+
+### Production Deployment
+- Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
+- Use environment variables to configure RabbitMQ connection details.
+
+---
+
+## 👨‍💻 Author
+**Tanvir Bhuiyan**  
+Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer  
+🔗 GitHub: [@TanvirBhuiyan19](https://github.com/TanvirBhuiyan19)
+
+---
+
+## 📄 License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+---
+
+✨ *“Building scalable systems, one service at a time.”*
