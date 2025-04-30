@@ -39,6 +39,7 @@ This project demonstrates a microservices architecture for an e-commerce platfor
 
 ## 📂 Project Structure
 
+```plaintext
 ecommerce-microservices-golang/
 ├── order-service/
 │   ├── go.mod
