@@ -1,4 +1,3 @@
-```markdown
 # 📦 Inventory Service
 
 ![Go Version](https://img.shields.io/badge/Go-1.23.4-blue)
@@ -43,10 +42,11 @@ This service is designed to be lightweight, scalable, and independently deployab
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/TanvirBhuiyan19/ecommerce-microservices-golang.git
+   git clone https://github.com/yourusername/ecommerce-microservices-golang.git
    cd ecommerce-microservices-golang/inventory-service
    ```
 
+```markdown
 2. Build and run the service using Docker:
    ```bash
    docker build -t inventory-service .
