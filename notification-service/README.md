@@ -89,7 +89,7 @@ RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
     │   └── [rabbitmq_manager.go]
     └── [README.md]
     
----
+
 🧪 Testing (Planned)
     Unit tests for RabbitMQ consumers.
     Integration tests for end-to-end message flow.
@@ -129,3 +129,4 @@ Senior Software Engineer | Microservices Enthusiast | Distributed Systems Design
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ✨ “Building scalable systems, one service at a time.” 
+---
