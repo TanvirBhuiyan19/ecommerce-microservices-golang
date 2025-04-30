@@ -78,17 +78,17 @@ RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
 
 📂 Project Structure
 ---
-```plaintext
-notification-service/
-├── [go.mod]
-├── Dockerfile
-├── [main.go]
-├── consumer/
-│   └── [consumer.go]
-├── shared/
-│   └── [rabbitmq_manager.go]
-└── [README.md]
-```
+    ```plaintext
+    notification-service/
+    ├── [go.mod]
+    ├── Dockerfile
+    ├── [main.go]
+    ├── consumer/
+    │   └── [consumer.go]
+    ├── shared/
+    │   └── [rabbitmq_manager.go]
+    └── [README.md]
+    ```
 ---
 🧪 Testing (Planned)
     Unit tests for RabbitMQ consumers.
@@ -99,11 +99,12 @@ notification-service/
     Dockerized Service
 
     Build and push the Docker image:
+---
     ```bash
     docker build -t your-docker-username/notification-service:latest .
     docker push your-docker-username/notification-service:latest
     ```
-
+---
     Deploy the service using Docker Compose:
 
     notification-service:
@@ -118,12 +119,12 @@ notification-service/
 Production Deployment
     Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
     Use environment variables to configure RabbitMQ connection details.
-
+---
 👨‍💻 Author
 Tanvir Bhuiyan
 Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer
 🔗 GitHub: @TanvirBhuiyan19
-
+---
 📄 License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
