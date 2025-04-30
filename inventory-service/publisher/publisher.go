@@ -8,17 +8,14 @@ import (
 )
 
 func PublishInventoryUpdate(orderID string) error {
-	conn, err := shared.GetRabbitMQConnection()
+	// Get the RabbitMQManager instance
+	manager, err := shared.GetRabbitMQManager()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get RabbitMQ manager: %w", err)
 	}
-	defer conn.Close()
 
-	ch, err := conn.Channel()
-	if err != nil {
-		return fmt.Errorf("failed to open a channel: %w", err)
-	}
-	defer ch.Close()
+	// Get the channel from the manager
+	ch := manager.GetChannel()
 
 	// Declare the "inventory_updated" exchange
 	err = ch.ExchangeDeclare(

@@ -1,27 +1,23 @@
 package publisher
 
 import (
-	"log"
+	"fmt"
+	"order-service/shared"
 
 	"github.com/streadway/amqp"
 )
 
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
-}
-
 func Publish(body []byte) error {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	failOnError(err, "Failed to connect to RabbitMQ")
-	defer conn.Close()
+	// Get the RabbitMQManager instance
+	manager, err := shared.GetRabbitMQManager()
+	if err != nil {
+		return fmt.Errorf("failed to get RabbitMQ manager: %w", err)
+	}
 
-	ch, err := conn.Channel()
-	failOnError(err, "Failed to open a channel")
-	defer ch.Close()
+	// Get the channel from the manager
+	ch := manager.GetChannel()
 
-	// Declare fanout exchange
+	// Declare the "order_created" exchange
 	err = ch.ExchangeDeclare(
 		"order_created", // name
 		"fanout",        // type
@@ -31,12 +27,14 @@ func Publish(body []byte) error {
 		false,           // no-wait
 		nil,             // arguments
 	)
-	failOnError(err, "Failed to declare exchange")
+	if err != nil {
+		return fmt.Errorf("failed to declare exchange: %w", err)
+	}
 
-	// Publish to exchange (not queue)
+	// Publish the message to the "order_created" exchange
 	err = ch.Publish(
 		"order_created", // exchange
-		"",              // routing key
+		"",              // routing key (not used for fanout)
 		false,           // mandatory
 		false,           // immediate
 		amqp.Publishing{
@@ -44,6 +42,10 @@ func Publish(body []byte) error {
 			Body:        body,
 		},
 	)
-	return err
+	if err != nil {
+		return fmt.Errorf("failed to publish message: %w", err)
+	}
 
+	fmt.Printf("[Publisher] Published message to 'order_created' exchange: %s\n", string(body))
+	return nil
 }

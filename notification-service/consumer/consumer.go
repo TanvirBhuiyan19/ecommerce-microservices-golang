@@ -3,8 +3,7 @@ package consumer
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/streadway/amqp"
+	"notification-service/shared"
 )
 
 type Order struct {
@@ -14,14 +13,18 @@ type Order struct {
 }
 
 func StartNotificationConsumer() {
-	conn, _ := amqp.Dial("amqp://guest:guest@localhost:5672/")
-	defer conn.Close()
+	// Get the RabbitMQManager instance
+	manager, err := shared.GetRabbitMQManager()
+	if err != nil {
+		fmt.Printf("Failed to get RabbitMQ manager: %s\n", err)
+		return
+	}
 
-	ch, _ := conn.Channel()
-	defer ch.Close()
+	// Get the channel from the manager
+	ch := manager.GetChannel()
 
 	// Declare the "order_created" exchange
-	ch.ExchangeDeclare(
+	err = ch.ExchangeDeclare(
 		"order_created", // name
 		"fanout",        // type
 		true,            // durable
@@ -30,9 +33,13 @@ func StartNotificationConsumer() {
 		false,           // no-wait
 		nil,             // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to declare exchange 'order_created': %s\n", err)
+		return
+	}
 
 	// Declare the "inventory_updated" exchange
-	ch.ExchangeDeclare(
+	err = ch.ExchangeDeclare(
 		"inventory_updated", // name
 		"fanout",            // type
 		true,                // durable
@@ -41,9 +48,13 @@ func StartNotificationConsumer() {
 		false,               // no-wait
 		nil,                 // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to declare exchange 'inventory_updated': %s\n", err)
+		return
+	}
 
 	// Create a queue for "order_created" messages
-	orderQueue, _ := ch.QueueDeclare(
+	orderQueue, err := ch.QueueDeclare(
 		"notification_order_queue", // name
 		true,                       // durable
 		false,                      // auto-delete
@@ -51,18 +62,26 @@ func StartNotificationConsumer() {
 		false,                      // no-wait
 		nil,                        // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to declare queue 'notification_order_queue': %s\n", err)
+		return
+	}
 
 	// Bind the queue to the "order_created" exchange
-	ch.QueueBind(
+	err = ch.QueueBind(
 		orderQueue.Name, // queue name
 		"",              // routing key (not used for fanout)
 		"order_created", // exchange name
 		false,           // no-wait
 		nil,             // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to bind queue 'notification_order_queue': %s\n", err)
+		return
+	}
 
 	// Create a queue for "inventory_updated" messages
-	inventoryQueue, _ := ch.QueueDeclare(
+	inventoryQueue, err := ch.QueueDeclare(
 		"notification_inventory_queue", // name
 		true,                           // durable
 		false,                          // auto-delete
@@ -70,18 +89,26 @@ func StartNotificationConsumer() {
 		false,                          // no-wait
 		nil,                            // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to declare queue 'notification_inventory_queue': %s\n", err)
+		return
+	}
 
 	// Bind the queue to the "inventory_updated" exchange
-	ch.QueueBind(
+	err = ch.QueueBind(
 		inventoryQueue.Name, // queue name
 		"",                  // routing key (not used for fanout)
 		"inventory_updated", // exchange name
 		false,               // no-wait
 		nil,                 // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to bind queue 'notification_inventory_queue': %s\n", err)
+		return
+	}
 
 	// Consume messages from the "order_created" queue
-	orderMsgs, _ := ch.Consume(
+	orderMsgs, err := ch.Consume(
 		orderQueue.Name, // queue name
 		"",              // consumer tag (not used)
 		true,            // auto-acknowledge
@@ -90,9 +117,13 @@ func StartNotificationConsumer() {
 		false,           // no-wait (not used)
 		nil,             // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to consume messages from 'notification_order_queue': %s\n", err)
+		return
+	}
 
 	// Consume messages from the "inventory_updated" queue
-	inventoryMsgs, _ := ch.Consume(
+	inventoryMsgs, err := ch.Consume(
 		inventoryQueue.Name, // queue name
 		"",                  // consumer tag (not used)
 		true,                // auto-acknowledge
@@ -101,6 +132,10 @@ func StartNotificationConsumer() {
 		false,               // no-wait (not used)
 		nil,                 // arguments
 	)
+	if err != nil {
+		fmt.Printf("Failed to consume messages from 'notification_inventory_queue': %s\n", err)
+		return
+	}
 
 	fmt.Println("Notification Service listening for messages...")
 
@@ -108,7 +143,11 @@ func StartNotificationConsumer() {
 	go func() {
 		for msg := range orderMsgs {
 			var order Order
-			json.Unmarshal(msg.Body, &order)
+			err := json.Unmarshal(msg.Body, &order)
+			if err != nil {
+				fmt.Printf("Failed to unmarshal message from 'order_created': %s\n", err)
+				continue
+			}
 			fmt.Printf("[Notification] Received order: %s for user: %s, item: %s\n", order.OrderID, order.User, order.Item)
 		}
 	}()

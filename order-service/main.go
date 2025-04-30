@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"order-service/publisher"
+	"order-service/shared"
 )
 
 type Order struct {
@@ -59,10 +60,17 @@ func createOrderHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// Initialize RabbitMQManager
+	manager, err := shared.GetRabbitMQManager()
+	if err != nil {
+		log.Fatalf("Failed to initialize RabbitMQ manager: %s", err)
+	}
+	defer manager.Close()
+
 	// Set up the HTTP server
 	http.HandleFunc("/create-order", createOrderHandler)
 
 	fmt.Println("Server is running on port 8080...")
-	err := http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(":8080", nil)
 	failOnError(err, "Failed to start server")
 }
