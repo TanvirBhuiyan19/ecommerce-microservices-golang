@@ -88,7 +88,7 @@ notification-service/
 │   └── [rabbitmq_manager.go]
 └── [README.md]
 ```
-
+```plaintext
 🧪 Testing (Planned)
     Unit tests for RabbitMQ consumers.
     Integration tests for end-to-end message flow.
@@ -117,7 +117,7 @@ notification-service/
 Production Deployment
     Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
     Use environment variables to configure RabbitMQ connection details.
-    
+
 👨‍💻 Author
 Tanvir Bhuiyan
 Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer
