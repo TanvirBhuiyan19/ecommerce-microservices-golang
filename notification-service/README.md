@@ -77,6 +77,7 @@ Variable	Description	Default Value
 RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
 
 📂 Project Structure
+---
 ```plaintext
 notification-service/
 ├── [go.mod]
@@ -88,7 +89,7 @@ notification-service/
 │   └── [rabbitmq_manager.go]
 └── [README.md]
 ```
-```plaintext
+---
 🧪 Testing (Planned)
     Unit tests for RabbitMQ consumers.
     Integration tests for end-to-end message flow.
@@ -101,7 +102,7 @@ notification-service/
     ```bash
     docker build -t your-docker-username/notification-service:latest .
     docker push your-docker-username/notification-service:latest
-
+    ```
 
     Deploy the service using Docker Compose:
 
@@ -126,4 +127,5 @@ Senior Software Engineer | Microservices Enthusiast | Distributed Systems Design
 📄 License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-✨ “Building scalable systems, one service at a time.” ```
+✨ “Building scalable systems, one service at a time.” 
+---
