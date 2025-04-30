@@ -101,10 +101,10 @@ notification-service/
     ```bash
     docker build -t your-docker-username/notification-service:latest .
     docker push your-docker-username/notification-service:latest
-    ```
+
 
     Deploy the service using Docker Compose:
-    ```plaintext
+
     notification-service:
     build:
         context: ./notification-service
@@ -112,7 +112,7 @@ notification-service/
         - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
     depends_on:
         - rabbitmq
-    ```
+
 
 Production Deployment
     Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
