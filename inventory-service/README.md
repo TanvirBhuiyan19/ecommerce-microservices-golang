@@ -46,7 +46,6 @@ This service is designed to be lightweight, scalable, and independently deployab
    cd ecommerce-microservices-golang/inventory-service
    ```
 
-```markdown
 2. Build and run the service using Docker:
    ```bash
    docker build -t inventory-service .
@@ -62,6 +61,7 @@ This service is designed to be lightweight, scalable, and independently deployab
 4. Ensure RabbitMQ is running and accessible at the URL specified in the `RABBITMQ_URL` environment variable.
 
 ---
+```markdown
 
 ## ✅ Features
 
