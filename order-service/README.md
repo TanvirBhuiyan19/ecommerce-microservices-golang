@@ -42,7 +42,7 @@ This service is designed to be lightweight, scalable, and independently deployab
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ecommerce-microservices-golang.git
+   git clone https://github.com/TanvirBhuiyan19/ecommerce-microservices-golang.git
    cd ecommerce-microservices-golang/order-service
     ```
 
@@ -83,16 +83,17 @@ This service is designed to be lightweight, scalable, and independently deployab
     RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
 
 📂 Project Structure
+---
 
     order-service/
-    ├── [go.mod]
+    ├── go.mod
     ├── Dockerfile
-    ├── [main.go]
+    ├── main.go
     ├── publisher/
-    │   └── [publisher.go]
+    │   └── publisher.go
     ├── shared/
-    │   └── [rabbitmq_manager.go]
-    └── [README.md]
+    │   └── rabbitmq_manager.go
+    └── README.md
 
 🧪 Testing (Planned)
     Unit tests for RabbitMQ publishers.
@@ -103,20 +104,21 @@ This service is designed to be lightweight, scalable, and independently deployab
     Dockerized Service
 
     Build and push the Docker image:
-    ```bash
-    docker build -t your-docker-username/order-service:latest .
-    docker push your-docker-username/order-service:latest
-    ```
+
+        docker build -t your-docker-username/order-service:latest .
+        docker push your-docker-username/order-service:latest
 
     Deploy the service using Docker Compose:
-    order-service:
-    build:
-        context: ./order-service
-    environment:
-        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-    depends_on:
-        - rabbitmq
+    
+        order-service:
+            build:
+                context: ./order-service
+            environment:
+                - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+            depends_on:
+                - rabbitmq
 
+---
 Production Deployment
     Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
     Use environment variables to configure RabbitMQ connection details.
@@ -130,4 +132,5 @@ Production Deployment
 📄 License
     This project is licensed under the MIT License. See the LICENSE file for details.
 
-✨ “Building scalable systems, one service at a time.” ```
+✨ “Building scalable systems, one service at a time.” 
+---

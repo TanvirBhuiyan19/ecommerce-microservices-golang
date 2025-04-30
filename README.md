@@ -1,6 +1,6 @@
 # 🛒 E-Commerce Microservices with RabbitMQ
 
-![Go Version](https://img.shields.io/badge/Go-1.21-blue)
+![Go Version](https://img.shields.io/badge/Go-1.23.4-blue)
 ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.x-orange)
 ![Docker](https://img.shields.io/badge/Dockerized-yes-blue)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
@@ -49,7 +49,7 @@ ecommerce-microservices-golang/
 │   │   └── publisher.go
 │   ├── shared/
 │   │   └── rabbitmq.go
-│   └── [README.md]
+│   └── README.md
 ├── inventory-service/
 │   ├── go.mod
 │   ├── Dockerfile
@@ -60,7 +60,7 @@ ecommerce-microservices-golang/
 │   │   └── publisher.go
 │   ├── shared/
 │   │   └── rabbitmq_manager.go
-│   └── [README.md]
+│   └── README.md
 ├── notification-service/
 │   ├── go.mod
 │   ├── Dockerfile
@@ -69,8 +69,8 @@ ecommerce-microservices-golang/
 │   │   └── consumer.go
 │   ├── shared/
 │   │   └── rabbitmq.go
-│   └── [README.md]
-└── [docker-compose.yml]
+│   └── README.md
+└── docker-compose.yml
 ```
 
 ## 🚀 Local Development Setup
@@ -83,7 +83,7 @@ ecommerce-microservices-golang/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ecommerce-microservices-golang.git
+   git clone https://github.com/TanvirBhuiyan19/ecommerce-microservices-golang.git
    cd ecommerce-microservices-golang
 
 2. Build and start the services using Docker Compose:
@@ -141,7 +141,7 @@ RabbitMQ exchanges:
 ## 👨‍💻 Author
     Tanvir Bhuiyan  
     Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer
-    🔗 GitHub: [@TanvirBhuiyan19](https://github.com/TanvirBhuiyan19)
+    🔗 GitHub: @TanvirBhuiyan19
 
 ---
 

@@ -42,7 +42,7 @@ This service is designed to be lightweight, scalable, and independently deployab
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ecommerce-microservices-golang.git
+   git clone https://github.com/TanvirBhuiyan19/ecommerce-microservices-golang.git
    cd ecommerce-microservices-golang/notification-service
    ```
 
@@ -62,6 +62,7 @@ This service is designed to be lightweight, scalable, and independently deployab
 
 
 ✅ Features
+
 🔄 Asynchronous Communication
 
 RabbitMQ Exchanges:
@@ -80,14 +81,14 @@ RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
 ---
     
     notification-service/
-    ├── [go.mod]
+    ├── go.mod
     ├── Dockerfile
-    ├── [main.go]
+    ├── main.go
     ├── consumer/
-    │   └── [consumer.go]
+    │   └── consumer.go
     ├── shared/
-    │   └── [rabbitmq_manager.go]
-    └── [README.md]
+    │   └── rabbitmq_manager.go
+    └── README.md
     
 
 🧪 Testing (Planned)
@@ -108,12 +109,12 @@ RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
     Deploy the service using Docker Compose:
 
     notification-service:
-    build:
-        context: ./notification-service
-    environment:
-        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-    depends_on:
-        - rabbitmq
+        build:
+            context: ./notification-service
+        environment:
+            - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+        depends_on:
+            - rabbitmq
 
 ---
 Production Deployment
