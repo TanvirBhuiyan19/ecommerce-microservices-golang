@@ -48,7 +48,7 @@ ecommerce-microservices-golang/
 │   ├── publisher/
 │   │   └── publisher.go
 │   ├── shared/
-│   │   └── rabbitmq.go
+│   │   └── rabbitmq_manager.go
 │   └── README.md
 ├── inventory-service/
 │   ├── go.mod
@@ -68,10 +68,13 @@ ecommerce-microservices-golang/
 │   ├── consumer/
 │   │   └── consumer.go
 │   ├── shared/
-│   │   └── rabbitmq.go
+│   │   └── rabbitmq_manager.go
 │   └── README.md
-└── docker-compose.yml
+├── docker-compose.yml
+└── Makefile
 ```
+
+---
 
 ## 🚀 Local Development Setup
 
@@ -85,67 +88,125 @@ ecommerce-microservices-golang/
    ```bash
    git clone https://github.com/TanvirBhuiyan19/ecommerce-microservices-golang.git
    cd ecommerce-microservices-golang
+   ```
 
 2. Build and start the services using Docker Compose:
-    docker-compose up --build
+   ```bash
+   docker-compose up --build
+   ```
 
 3. Access RabbitMQ Management UI:
-    URL: http://localhost:15672
-    Username: guest
-    Password: guest
+   - **URL**: [http://localhost:15672](http://localhost:15672)
+   - **Username**: `guest`
+   - **Password**: `guest`
 
 4. Test the services:
-    Order Service: Create an order via the REST API:
+   - **Order Service**: Create an order via the REST API:
+     ```bash
+     curl "http://localhost:8080/create-order?order_id=ORD123&user=John&item=Book"
+     ```
+   - **Inventory Service**: Automatically consumes the order event and publishes an inventory update.
+   - **Notification Service**: Logs notifications for both order creation and inventory updates.
 
-    curl "http://localhost:8080/create-order?order_id=ORD123&user=John&item=Book"
+---
 
-    Inventory Service: Automatically consumes the order event and publishes an inventory update.
-    Notification Service: Logs notifications for both order creation and inventory updates.
+## ✅ Features
 
-✅ Features Implemented
-🔄 Asynchronous Communication
+### 🔄 Asynchronous Communication
+- **RabbitMQ Exchanges**:
+  - `order_created`: For order events.
+  - `inventory_updated`: For inventory updates.
 
-RabbitMQ exchanges:
-    order_created: For order events.
-    inventory_updated: For inventory updates.
+### 🛒 Order Service
+- REST API for creating orders.
+- Publishes order events to RabbitMQ.
 
-🛒 Order Service
-    REST API for creating orders.
-    Publishes order events to RabbitMQ.
+### 📦 Inventory Service
+- Consumes order events from RabbitMQ.
+- Updates inventory and publishes inventory updates.
 
-📦 Inventory Service
-    Consumes order events from RabbitMQ.
-    Updates inventory and publishes inventory updates.
+### 🔔 Notification Service
+- Listens to both order and inventory updates.
+- Logs notifications for user updates.
 
-🔔 Notification Service
-    Listens to both order and inventory updates.
-    Logs notifications for user updates.
+---
 
-🏗️ Environment Variables
-    Variable	Description	Default Value
-    RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
+## 🏗️ Environment Variables
 
-🧪 Testing (Planned)
-    Unit tests for RabbitMQ publishers and consumers.
-    Integration tests for end-to-end message flow.
-    Mock RabbitMQ for isolated testing.
+| Variable       | Description                | Default Value                       |
+|----------------|----------------------------|-------------------------------------|
+| `RABBITMQ_URL` | RabbitMQ connection URL    | `amqp://guest:guest@localhost:5672/` |
 
-☁️ Deployment
-    Dockerized Services
-    Each service is containerized with its own Dockerfile.
-    Use docker-compose.yml for local development and testing.
-    Production Deployment
-    Deploy each service independently on different servers or cloud environments.
-    Use environment variables to configure RabbitMQ connection details.
+---
+
+## 🧪 Testing (Planned)
+- Unit tests for RabbitMQ publishers and consumers.
+- Integration tests for end-to-end message flow.
+- Mock RabbitMQ for isolated testing.
+
+---
+
+## ☁️ Deployment
+
+### Dockerized Services
+- Build and push Docker images:
+  ```bash
+  docker build -t your-docker-username/order-service:latest ./order-service
+  docker build -t your-docker-username/inventory-service:latest ./inventory-service
+  docker build -t your-docker-username/notification-service:latest ./notification-service
+  docker push your-docker-username/order-service:latest
+  docker push your-docker-username/inventory-service:latest
+  docker push your-docker-username/notification-service:latest
+  ```
+
+- Deploy the services using Docker Compose:
+  ```yml
+  version: '3'
+  services:
+    rabbitmq:
+      image: rabbitmq:3-management
+      ports:
+        - "5672:5672"
+        - "15672:15672"
+    order-service:
+      build:
+        context: ./order-service
+      environment:
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      depends_on:
+        - rabbitmq
+    inventory-service:
+      build:
+        context: ./inventory-service
+      environment:
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      depends_on:
+        - rabbitmq
+    notification-service:
+      build:
+        context: ./notification-service
+      environment:
+        - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+      depends_on:
+        - rabbitmq
+  ```
+
+### Production Deployment
+- Deploy each service independently on cloud environments (e.g., AWS EC2, Kubernetes).
+- Use environment variables to configure RabbitMQ connection details.
+
+---
 
 ## 👨‍💻 Author
-    Tanvir Bhuiyan  
-    Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer
-    🔗 GitHub: @TanvirBhuiyan19
+**Tanvir Bhuiyan**  
+Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer  
+🔗 GitHub: [@TanvirBhuiyan19](https://github.com/TanvirBhuiyan19)
 
 ---
 
 ## 📄 License
-Licensed under the MIT License.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-✨ “Building scalable systems, one service at a time.”
+---
+
+✨ *“Building scalable systems, one service at a time.”*
