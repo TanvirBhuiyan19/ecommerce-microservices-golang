@@ -71,7 +71,7 @@ ecommerce-microservices-golang/
 │   │   └── rabbitmq.go
 │   └── [README.md]
 └── [docker-compose.yml]
-
+```
 
 ## 🚀 Local Development Setup
 
