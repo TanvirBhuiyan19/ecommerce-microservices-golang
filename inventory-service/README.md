@@ -61,7 +61,6 @@ This service is designed to be lightweight, scalable, and independently deployab
 4. Ensure RabbitMQ is running and accessible at the URL specified in the `RABBITMQ_URL` environment variable.
 
 ---
-```markdown
 
 ## ✅ Features
 
@@ -148,4 +147,3 @@ This project is licensed under the MIT License. See the LICENSE file for details
 ---
 
 ✨ *“Building scalable systems, one service at a time.”*
-```
