@@ -47,87 +47,101 @@ This service is designed to be lightweight, scalable, and independently deployab
    ```
 
 2. Build and run the service using Docker:
-    ```bash
-    docker build -t notification-service .
-    docker run -d --name notification-service -p 8082:8080 -e RABBITMQ_URL=amqp://guest:guest@localhost:5672/ notification-service
-    ```
+   ```bash
+   docker build -t notification-service .
+   docker run -d --name notification-service -p 8082:8080 -e RABBITMQ_URL=amqp://guest:guest@localhost:5672/ notification-service
+   ```
 
 3. Alternatively, run the service locally:
-    ```bash
-    go mod tidy
-    go run main.go
-    ```
+   ```bash
+   go mod tidy
+   go run main.go
+   ```
 
-4. Ensure RabbitMQ is running and accessible at the URL specified in the RABBITMQ_URL environment variable.
-
-
-✅ Features
-
-🔄 Asynchronous Communication
-
-RabbitMQ Exchanges:
-    order_created: For order events.
-    inventory_updated: For inventory updates.
-
-🔔 Notification Processing
-    Listens to messages from both order_created and inventory_updated exchanges.
-    Logs notifications for debugging and monitoring.
-
-🏗️ Environment Variables
-Variable	Description	Default Value
-RABBITMQ_URL	RabbitMQ connection URL	amqp://guest:guest@localhost:5672/
-
-📂 Project Structure
----
-    
-    notification-service/
-    ├── go.mod
-    ├── Dockerfile
-    ├── main.go
-    ├── consumer/
-    │   └── consumer.go
-    ├── shared/
-    │   └── rabbitmq_manager.go
-    └── README.md
-    
-
-🧪 Testing (Planned)
-    Unit tests for RabbitMQ consumers.
-    Integration tests for end-to-end message flow.
-    Mock RabbitMQ for isolated testing.
-
-☁️ Deployment
-    Dockerized Service
-
-    Build and push the Docker image:
----
-    
-    docker build -t your-docker-username/notification-service:latest .
-    docker push your-docker-username/notification-service:latest
-    
----
-    Deploy the service using Docker Compose:
-
-    notification-service:
-        build:
-            context: ./notification-service
-        environment:
-            - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-        depends_on:
-            - rabbitmq
+4. Ensure RabbitMQ is running and accessible at the URL specified in the `RABBITMQ_URL` environment variable.
 
 ---
-Production Deployment
-    Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
-    Use environment variables to configure RabbitMQ connection details.
 
-👨‍💻 Author
-Tanvir Bhuiyan
-Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer
-🔗 GitHub: @TanvirBhuiyan19
+## ✅ Features
 
-📄 License
+### 🔄 Asynchronous Communication
+- **RabbitMQ Exchanges**:
+  - `order_created`: Consumes order events to process notifications.
+  - `inventory_updated`: Consumes inventory updates to process notifications.
+
+### 🔔 Notification Processing
+- Listens to messages from both `order_created` and `inventory_updated` exchanges.
+- Logs notifications for debugging and monitoring.
+
+---
+
+## 🏗️ Environment Variables
+
+| Variable       | Description                | Default Value                       |
+|----------------|----------------------------|-------------------------------------|
+| `RABBITMQ_URL` | RabbitMQ connection URL    | `amqp://guest:guest@localhost:5672/` |
+
+---
+
+## 📂 Project Structure
+
+```plaintext
+notification-service/
+├── go.mod
+├── Dockerfile
+├── main.go
+├── consumer/
+│   └── consumer.go
+├── shared/
+│   └── rabbitmq_manager.go
+└── README.md
+```
+
+---
+
+## 🧪 Testing (Planned)
+- Unit tests for RabbitMQ consumers.
+- Integration tests for end-to-end message flow.
+- Mock RabbitMQ for isolated testing.
+
+---
+
+## ☁️ Deployment
+
+### Dockerized Service
+- Build and push the Docker image:
+  ```bash
+  docker build -t your-docker-username/notification-service:latest .
+  docker push your-docker-username/notification-service:latest
+  ```
+
+- Deploy the service using Docker Compose:
+  ```yml
+  notification-service:
+    build:
+      context: ./notification-service
+    environment:
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
+  ```
+
+### Production Deployment
+- Deploy the service independently on a cloud environment (e.g., AWS EC2, Kubernetes).
+- Use environment variables to configure RabbitMQ connection details.
+
+---
+
+## 👨‍💻 Author
+**Tanvir Bhuiyan**  
+Senior Software Engineer | Microservices Enthusiast | Distributed Systems Designer  
+🔗 GitHub: [@TanvirBhuiyan19](https://github.com/TanvirBhuiyan19)
+
+---
+
+## 📄 License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-✨ “Building scalable systems, one service at a time.” 
 ---
+
+✨ *“Building scalable systems, one service at a time.”*
